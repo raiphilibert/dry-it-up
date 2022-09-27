@@ -1,0 +1,154 @@
+---
+title: "Vancouver Datafest 2022 - Dry It Up"
+author: "Raissa Philibert"
+format: revealjs
+execute:
+  echo: true
+editor: visual
+---
+
+## Don't Repeat Yourself - DRY
+
+-    Principle of software development
+
+-   Avoid repeating information
+
+-   Let's see an example of why
+
+## Dataset
+
+-   Example from measurements of water chemistry dataset that is freely available
+
+-   Dataset "water_chemistry.Rda" under data in the git repository
+
+-   You can also download this dataset directly from the "[rems](https://github.com/bcgov/rems)" package (provided by BC Gov)
+
+## Code to download EMS data
+
+```{r, echo = T,}
+library(rems)
+library(dplyr)
+four_year <- get_ems_data(which = "4yr")
+
+ems_sites_vec <- c("E255013","E271643")
+##EMS Site: 
+filtered_4yr <-
+  filter_ems_data(four_year, emsid = ems_sites_vec)
+
+save(filtered_4yr, file = "data/water_chemistry.Rda")
+```
+
+# Example 1: Boring, tedious,code
+
+Let's look at our dataset.
+
+![](dry-it-up_presentation_files/siteMap.png)
+
+```{r}
+filtered_4yr %>% distinct(MONITORING_LOCATION,EMS_ID)
+
+```
+
+# Example 1: Boring, tedious,code
+
+If we've never heard of DRY and we want to make a plot for each parameter and each site.
+
+Let's start this live coding example by looking at the parameters
+
+```{r}
+
+
+```
+
+# Example 1: Boring, tedious,code
+
+Let's create a first plot for one parameter, one site
+
+```{r}
+library(ggplot2)
+
+dat_ems_255013_ph <-
+  filtered_4yr %>%
+  filter(
+    EMS_ID == "E255013",
+    PARAMETER == "pH"
+  )
+
+pl <- ggplot(dat_ems_255013_ph,
+       aes(x = COLLECTION_START,
+                 y = RESULT)) +
+  geom_point()+
+  geom_line()+
+  ylab("pH (pH uits)")+
+  xlab("Date")
+  theme_bw()
+  
+print(pl)
+
+```
+
+Ok, now let's do this for each parameter, each site.
+
+# Example 1: The real kicker
+
+Reviewer doesn't like the format of these plots. Let's do them again?
+
+![](dry-it-up_presentation_files/oh_hell_no.gif){fig-align="center"}
+
+# Solution Step 1: Loops
+
+A loop is a sequence of operations that are performed over and over in some order using a loop `variable`.
+
+```{r, eval = F}
+
+for (variable in collection) {
+  do things with variable
+}
+```
+
+# Loops
+
+You can name the loop `variable` anything you like with a few restrictions:
+
+-   the name of the variable cannot start with a number
+
+A few notes about the loop syntax:
+
+1.  The loop condition `(variable in collection)` is enclosed in parentheses `()`.
+
+2.  The body of the loop is enclosed in curly braces `{ }`.
+
+# 
+Basic Loop
+
+```{r, basicLoop}
+vowels <- c("a", "e", "i", "o", "u")
+# loop through each element in the vector and print out the letter
+for (v in vowels) {
+  print(v)
+}
+```
+
+# Loop on our dataset
+
+Live code
+
+# Solution Step 2: Functions
+
+### **How to Write a Function in R**
+
+There are several parts of a function:
+
+1.  **Function name**. This is what you use when you call a function. For example plot(my_data) is a function with the name `plot`. You pass that function my_data and it plots accordingly.
+
+2.  **The function() function**: Confusing, right? The `function()` is actually a function that allows you to create a function. Trust us on this one.
+
+3.  **Function Arguments:** An argument is what you pass the function. The function will take that object of value provided in the argument and use it to perform some task. In the example above, my_data is actually an argument value. In the case of plot, my_data provides that data that you wish to plot. `main =` in the plot function is the argument that allows you to pass a title to the plot.
+
+4.  **Documentation:** Documentation is not required for the function to work. However good documentation will save you time in the future when you need to use this code again.
+
+Below is an example function. Notice that the part of the function that actually runs or evaluates things, is enclosed in curly braces `{}`.
+
+# Solution Step 3: If Statements
+
+# Solution Step 4: Apply/Map functions
