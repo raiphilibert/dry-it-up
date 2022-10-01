@@ -4,12 +4,19 @@ author: "Raissa Philibert"
 format: revealjs
 execute:
   echo: true
+  eval: false
 editor: visual
 ---
 
+## Before we start
+
+Git repository with code and slides:
+
+https://github.com/raiphilibert/dry-it-up
+
 ## Don't Repeat Yourself - DRY
 
--    Principle of software development
+-   Principle of software development
 
 -   Avoid repeating information
 
@@ -45,6 +52,7 @@ Let's look at our dataset.
 ![](dry-it-up_presentation_files/siteMap.png)
 
 ```{r}
+load("data/water_chemistry.Rda")
 filtered_4yr %>% distinct(MONITORING_LOCATION,EMS_ID)
 
 ```
@@ -118,8 +126,7 @@ A few notes about the loop syntax:
 
 2.  The body of the loop is enclosed in curly braces `{ }`.
 
-# 
-Basic Loop
+# Basic Loop
 
 ```{r, basicLoop}
 vowels <- c("a", "e", "i", "o", "u")
@@ -131,24 +138,170 @@ for (v in vowels) {
 
 # Loop on our dataset
 
-Live code
+Live code: let's try make a plot for each site
+
+```{r}
+
+```
 
 # Solution Step 2: Functions
 
-### **How to Write a Function in R**
+# 
+
+### **How to Write a Function in R - part I**
 
 There are several parts of a function:
 
-1.  **Function name**. This is what you use when you call a function. For example plot(my_data) is a function with the name `plot`. You pass that function my_data and it plots accordingly.
+1.  **Function name**. - e.g plot(my_data) is a function with the name `plot`. You pass that function my_data and it plots accordingly.
 
-2.  **The function() function**: Confusing, right? The `function()` is actually a function that allows you to create a function. Trust us on this one.
+2.  **The function() function**: A function that allows you to create a function.
 
-3.  **Function Arguments:** An argument is what you pass the function. The function will take that object of value provided in the argument and use it to perform some task. In the example above, my_data is actually an argument value. In the case of plot, my_data provides that data that you wish to plot. `main =` in the plot function is the argument that allows you to pass a title to the plot.
+3.  **Function Arguments:** what's the function going to use?
 
-4.  **Documentation:** Documentation is not required for the function to work. However good documentation will save you time in the future when you need to use this code again.
+4.  **Documentation:** Not required for the function but for yourself
 
-Below is an example function. Notice that the part of the function that actually runs or evaluates things, is enclosed in curly braces `{}`.
+    See: https://www.earthdatascience.org/courses/earth-analytics/automate-science-workflows/write-function-r-programming/
+
+# Function example
+
+```{r}
+# this is an example function
+function_name <- function(argument1, argument2) {
+  #' document your function here
+  #' what the function does
+  #' function inputs and outputs
+  some_calculated_output <- (argument1 + argument2 )
+  return(some_calculated_output)
+}
+```
+
+# Challenge
+
+Write a function, called inches_to_mm that converts inches of rain to mm.
+
+```{r}
+inches_to_mm <- function(temp_fahr) {
+#' describe what the function does here
+#' inputs: Describe the input(s) that the function takes and the format of the input (ie numeric, character, data.frame, etc)
+#' outputs: Describe the output(s) and associated output format
+
+#' calculate mm
+
+return()
+
+}
+```
+
+# Function example
+
+Let's fill make a function for our plots
+
+-   need to define our arguments, including default arguments
+
+```{r}
+# this is an example function
+function_name <- function(argument1, argument2,default_argument = '') {
+  #' document your function here
+  #' what the function does
+  #' function inputs and outputs
+  some_calculated_output <- (argument1 + argument2 )/divide_by
+  return(some_calculated_output)
+}
+```
+
+# Documenting functions
+
+1.  Remind your future self what the function does
+
+2.  Show your future self and your colleagues how to use the function
+
+3.  Help anyone else looking at your code understand what **you think** the function does
+
+# ROxygen
+
+Helpful if you want to make packages later
+
+```{r}
+#' @name count_na
+#' @title provide a count of NAs in the columns of a data.frame
+#' @param dt a data frame
+#' @param columns a character vector of column names (default: all columns)
+#' 
+#' @section Improvements to do:
+#'  - add compatibility with vectors
+#'  - add ability to count NAs in all columns and sort output
+#' 
+#' @author  Raissa 
+#' @import dplyr
+#' @importFrom tidyr pivot_longer
+#' @export
+```
 
 # Solution Step 3: If Statements
 
+-   If statements are about making choices.
+
+-   Use `if (condition)` to start a conditional statement, `else if (condition)` to provide additional tests, and `else` to provide a default.
+
+-   Use `==` to test for equality.
+
+-   `X && Y` is only true if both X and Y are true.
+
+-   `X || Y` is true if either X or Y, or both, are true.
+
+    # Example
+
+    An example for our running example: do we save the plot or not?
+
+```{r}
+
+
+```
+
+Any other choices you can think of?
+
 # Solution Step 4: Apply/Map functions
+
+-   To avoid loops, people often use apply functions
+
+    -   `apply()`, `lapply()`, `tapply()` etc
+
+-   purrr functions provide more consistency in output datatype
+
+    -   Need to choose function based on output type
+
+See: https://www.r-bloggers.com/2020/05/one-stop-tutorial-on-purrr-package-in-r/
+
+# Example: map()
+
+Instead of a loop, let's use the map function to create multiple plots
+
+```{r}
+
+```
+
+# Example: map2()
+
+Example to create a dataframe
+
+```{r}
+
+x <- c(2, 4, 5, 6)
+y <- c(2, 3, 4, 5)
+to_Power <- function(x, y){
+  return(x**y)
+}
+map2(x, y, to_Power)
+
+```
+
+# Example: map_df or map_chr
+
+```{r}
+
+
+```
+
+# 
+
+![](dry-it-up_presentation_files/download.jpg){fig-align="center" width="60%"}

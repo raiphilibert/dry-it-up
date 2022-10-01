@@ -387,6 +387,11 @@
   <p class="author">Raissa Philibert</p>
 </section>
 
+<section id="before-we-start" class="slide level2">
+<h2>Before we start</h2>
+<p>Git repository with code and slides:</p>
+<p>https://github.com/raiphilibert/dry-it-up</p>
+</section>
 <section id="dont-repeat-yourself---dry" class="slide level2">
 <h2>Don’t Repeat Yourself - DRY</h2>
 <ul>
@@ -423,14 +428,8 @@
 <p>Let’s look at our dataset.</p>
 
 <img data-src="dry-it-up_presentation_files/siteMap.png" class="r-stretch"><div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>filtered_4yr <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(MONITORING_LOCATION,EMS_ID)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 2
-  EMS_ID  MONITORING_LOCATION                                       
-  &lt;chr&gt;   &lt;chr&gt;                                                     
-1 E255013 NORTH ALOUETTE RIVER AT 132ND AVE BRIDGE NEAR MAPLE BRIDGE
-2 E271643 FRASER RIVER (MAIN ARM) AT GRAVESEND REACH- BUOY          </code></pre>
-</div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">load</span>(<span class="st">"data/water_chemistry.Rda"</span>)</span>
+<span id="cb2-2"><a href="#cb2-2"></a>filtered_4yr <span class="sc">%&gt;%</span> <span class="fu">distinct</span>(MONITORING_LOCATION,EMS_ID)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
 
@@ -447,456 +446,238 @@
 <h1>Example 1: Boring, tedious,code</h1>
 <p>Let’s create a first plot for one parameter, one site</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb4-2"><a href="#cb4-2"></a></span>
-<span id="cb4-3"><a href="#cb4-3"></a>dat_ems_255013_ph <span class="ot">&lt;-</span></span>
-<span id="cb4-4"><a href="#cb4-4"></a>  filtered_4yr <span class="sc">%&gt;%</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">filter</span>(</span>
-<span id="cb4-6"><a href="#cb4-6"></a>    EMS_ID <span class="sc">==</span> <span class="st">"E255013"</span>,</span>
-<span id="cb4-7"><a href="#cb4-7"></a>    PARAMETER <span class="sc">==</span> <span class="st">"pH"</span></span>
-<span id="cb4-8"><a href="#cb4-8"></a>  )</span>
-<span id="cb4-9"><a href="#cb4-9"></a></span>
-<span id="cb4-10"><a href="#cb4-10"></a>pl <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_ems_255013_ph,</span>
-<span id="cb4-11"><a href="#cb4-11"></a>       <span class="fu">aes</span>(<span class="at">x =</span> COLLECTION_START,</span>
-<span id="cb4-12"><a href="#cb4-12"></a>                 <span class="at">y =</span> RESULT)) <span class="sc">+</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb4-14"><a href="#cb4-14"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
-<span id="cb4-15"><a href="#cb4-15"></a>  <span class="fu">ylab</span>(<span class="st">"pH (pH uits)"</span>)<span class="sc">+</span></span>
-<span id="cb4-16"><a href="#cb4-16"></a>  <span class="fu">xlab</span>(<span class="st">"Date"</span>)</span>
-<span id="cb4-17"><a href="#cb4-17"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 93
- $ line                      :List of 6
-  ..$ colour       : chr "black"
-  ..$ size         : num 0.5
-  ..$ linetype     : num 1
-  ..$ lineend      : chr "butt"
-  ..$ arrow        : logi FALSE
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_line" "element"
- $ rect                      :List of 5
-  ..$ fill         : chr "white"
-  ..$ colour       : chr "black"
-  ..$ size         : num 0.5
-  ..$ linetype     : num 1
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
- $ text                      :List of 11
-  ..$ family       : chr ""
-  ..$ face         : chr "plain"
-  ..$ colour       : chr "black"
-  ..$ size         : num 11
-  ..$ hjust        : num 0.5
-  ..$ vjust        : num 0.5
-  ..$ angle        : num 0
-  ..$ lineheight   : num 0.9
-  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : logi FALSE
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ title                     : NULL
- $ aspect.ratio              : NULL
- $ axis.title                : NULL
- $ axis.title.x              :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 1
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 2.75points 0points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.title.x.top          :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 0
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 2.75points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.title.x.bottom       : NULL
- $ axis.title.y              :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 1
-  ..$ angle        : num 90
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 2.75points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.title.y.left         : NULL
- $ axis.title.y.right        :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 0
-  ..$ angle        : num -90
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.75points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text                 :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : chr "grey30"
-  ..$ size         : 'rel' num 0.8
-  ..$ hjust        : NULL
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.x               :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 1
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 2.2points 0points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.x.top           :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 0
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 2.2points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.x.bottom        : NULL
- $ axis.text.y               :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : num 1
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.y.left          : NULL
- $ axis.text.y.right         :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : num 0
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.2points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.ticks                :List of 6
-  ..$ colour       : chr "grey20"
-  ..$ size         : NULL
-  ..$ linetype     : NULL
-  ..$ lineend      : NULL
-  ..$ arrow        : logi FALSE
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_line" "element"
- $ axis.ticks.x              : NULL
- $ axis.ticks.x.top          : NULL
- $ axis.ticks.x.bottom       : NULL
- $ axis.ticks.y              : NULL
- $ axis.ticks.y.left         : NULL
- $ axis.ticks.y.right        : NULL
- $ axis.ticks.length         : 'simpleUnit' num 2.75points
-  ..- attr(*, "unit")= int 8
- $ axis.ticks.length.x       : NULL
- $ axis.ticks.length.x.top   : NULL
- $ axis.ticks.length.x.bottom: NULL
- $ axis.ticks.length.y       : NULL
- $ axis.ticks.length.y.left  : NULL
- $ axis.ticks.length.y.right : NULL
- $ axis.line                 : list()
-  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
- $ axis.line.x               : NULL
- $ axis.line.x.top           : NULL
- $ axis.line.x.bottom        : NULL
- $ axis.line.y               : NULL
- $ axis.line.y.left          : NULL
- $ axis.line.y.right         : NULL
- $ legend.background         :List of 5
-  ..$ fill         : NULL
-  ..$ colour       : logi NA
-  ..$ size         : NULL
-  ..$ linetype     : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
- $ legend.margin             : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
-  ..- attr(*, "unit")= int 8
- $ legend.spacing            : 'simpleUnit' num 11points
-  ..- attr(*, "unit")= int 8
- $ legend.spacing.x          : NULL
- $ legend.spacing.y          : NULL
- $ legend.key                :List of 5
-  ..$ fill         : chr "white"
-  ..$ colour       : logi NA
-  ..$ size         : NULL
-  ..$ linetype     : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
- $ legend.key.size           : 'simpleUnit' num 1.2lines
-  ..- attr(*, "unit")= int 3
- $ legend.key.height         : NULL
- $ legend.key.width          : NULL
- $ legend.text               :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : 'rel' num 0.8
-  ..$ hjust        : NULL
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ legend.text.align         : NULL
- $ legend.title              :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : num 0
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ legend.title.align        : NULL
- $ legend.position           : chr "right"
- $ legend.direction          : NULL
- $ legend.justification      : chr "center"
- $ legend.box                : NULL
- $ legend.box.just           : NULL
- $ legend.box.margin         : 'margin' num [1:4] 0cm 0cm 0cm 0cm
-  ..- attr(*, "unit")= int 1
- $ legend.box.background     : list()
-  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
- $ legend.box.spacing        : 'simpleUnit' num 11points
-  ..- attr(*, "unit")= int 8
- $ panel.background          :List of 5
-  ..$ fill         : chr "white"
-  ..$ colour       : logi NA
-  ..$ size         : NULL
-  ..$ linetype     : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
- $ panel.border              :List of 5
-  ..$ fill         : logi NA
-  ..$ colour       : chr "grey20"
-  ..$ size         : NULL
-  ..$ linetype     : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
- $ panel.spacing             : 'simpleUnit' num 5.5points
-  ..- attr(*, "unit")= int 8
- $ panel.spacing.x           : NULL
- $ panel.spacing.y           : NULL
- $ panel.grid                :List of 6
-  ..$ colour       : chr "grey92"
-  ..$ size         : NULL
-  ..$ linetype     : NULL
-  ..$ lineend      : NULL
-  ..$ arrow        : logi FALSE
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_line" "element"
- $ panel.grid.major          : NULL
- $ panel.grid.minor          :List of 6
-  ..$ colour       : NULL
-  ..$ size         : 'rel' num 0.5
-  ..$ linetype     : NULL
-  ..$ lineend      : NULL
-  ..$ arrow        : logi FALSE
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_line" "element"
- $ panel.grid.major.x        : NULL
- $ panel.grid.major.y        : NULL
- $ panel.grid.minor.x        : NULL
- $ panel.grid.minor.y        : NULL
- $ panel.ontop               : logi FALSE
- $ plot.background           :List of 5
-  ..$ fill         : NULL
-  ..$ colour       : chr "white"
-  ..$ size         : NULL
-  ..$ linetype     : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
- $ plot.title                :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : 'rel' num 1.2
-  ..$ hjust        : num 0
-  ..$ vjust        : num 1
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 5.5points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ plot.title.position       : chr "panel"
- $ plot.subtitle             :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : num 0
-  ..$ vjust        : num 1
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 5.5points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ plot.caption              :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : 'rel' num 0.8
-  ..$ hjust        : num 1
-  ..$ vjust        : num 1
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 5.5points 0points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ plot.caption.position     : chr "panel"
- $ plot.tag                  :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : 'rel' num 1.2
-  ..$ hjust        : num 0.5
-  ..$ vjust        : num 0.5
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ plot.tag.position         : chr "topleft"
- $ plot.margin               : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
-  ..- attr(*, "unit")= int 8
- $ strip.background          :List of 5
-  ..$ fill         : chr "grey85"
-  ..$ colour       : chr "grey20"
-  ..$ size         : NULL
-  ..$ linetype     : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
- $ strip.background.x        : NULL
- $ strip.background.y        : NULL
- $ strip.placement           : chr "inside"
- $ strip.text                :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : chr "grey10"
-  ..$ size         : 'rel' num 0.8
-  ..$ hjust        : NULL
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 4.4points 4.4points 4.4points 4.4points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ strip.text.x              : NULL
- $ strip.text.y              :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : NULL
-  ..$ angle        : num -90
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ strip.switch.pad.grid     : 'simpleUnit' num 2.75points
-  ..- attr(*, "unit")= int 8
- $ strip.switch.pad.wrap     : 'simpleUnit' num 2.75points
-  ..- attr(*, "unit")= int 8
- $ strip.text.y.left         :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : NULL
-  ..$ angle        : num 90
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- - attr(*, "class")= chr [1:2] "theme" "gg"
- - attr(*, "complete")= logi TRUE
- - attr(*, "validate")= logi TRUE</code></pre>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a>dat_ems_255013_ph <span class="ot">&lt;-</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  filtered_4yr <span class="sc">%&gt;%</span></span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="fu">filter</span>(</span>
+<span id="cb3-6"><a href="#cb3-6"></a>    EMS_ID <span class="sc">==</span> <span class="st">"E255013"</span>,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>    PARAMETER <span class="sc">==</span> <span class="st">"pH"</span></span>
+<span id="cb3-8"><a href="#cb3-8"></a>  )</span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a>pl <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dat_ems_255013_ph,</span>
+<span id="cb3-11"><a href="#cb3-11"></a>       <span class="fu">aes</span>(<span class="at">x =</span> COLLECTION_START,</span>
+<span id="cb3-12"><a href="#cb3-12"></a>                 <span class="at">y =</span> RESULT)) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb3-15"><a href="#cb3-15"></a>  <span class="fu">ylab</span>(<span class="st">"pH (pH uits)"</span>)<span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16"></a>  <span class="fu">xlab</span>(<span class="st">"Date"</span>)</span>
+<span id="cb3-17"><a href="#cb3-17"></a>  <span class="fu">theme_bw</span>()</span>
+<span id="cb3-18"><a href="#cb3-18"></a>  </span>
+<span id="cb3-19"><a href="#cb3-19"></a><span class="fu">print</span>(pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">print</span>(pl)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-
-</div>
-<img data-src="dry-it-up_presentation_files/figure-revealjs/unnamed-chunk-4-1.png" width="960" class="r-stretch"><p>Ok, now let’s do this for each parameter, each site.</p>
+<p>Ok, now let’s do this for each parameter, each site.</p>
 </section>
 
 <section id="example-1-the-real-kicker" class="title-slide slide level1 center">
 <h1>Example 1: The real kicker</h1>
 <p>Reviewer doesn’t like the format of these plots. Let’s do them again?</p>
 
-<img data-src="dry-it-up_presentation_files/oh_hell_no.gif" class="r-stretch quarto-figure-center"><div class="footer footer-default">
+<img data-src="dry-it-up_presentation_files/oh_hell_no.gif" class="r-stretch quarto-figure-center"></section>
+
+<section id="solution-step-1-loops" class="title-slide slide level1 center">
+<h1>Solution Step 1: Loops</h1>
+<p>A loop is a sequence of operations that are performed over and over in some order using a loop <code>variable</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="cf">for</span> (variable <span class="cf">in</span> collection) {</span>
+<span id="cb4-2"><a href="#cb4-2"></a>  do things with variable</span>
+<span id="cb4-3"><a href="#cb4-3"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="loops" class="title-slide slide level1 center">
+<h1>Loops</h1>
+<p>You can name the loop <code>variable</code> anything you like with a few restrictions:</p>
+<ul>
+<li>the name of the variable cannot start with a number</li>
+</ul>
+<p>A few notes about the loop syntax:</p>
+<ol type="1">
+<li><p>The loop condition <code>(variable in collection)</code> is enclosed in parentheses <code>()</code>.</p></li>
+<li><p>The body of the loop is enclosed in curly braces <code>{ }</code>.</p></li>
+</ol>
+</section>
+
+<section id="basic-loop" class="title-slide slide level1 center">
+<h1>Basic Loop</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>vowels <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"a"</span>, <span class="st">"e"</span>, <span class="st">"i"</span>, <span class="st">"o"</span>, <span class="st">"u"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2"></a><span class="co"># loop through each element in the vector and print out the letter</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a><span class="cf">for</span> (v <span class="cf">in</span> vowels) {</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="fu">print</span>(v)</span>
+<span id="cb5-5"><a href="#cb5-5"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="loop-on-our-dataset" class="title-slide slide level1 center">
+<h1>Loop on our dataset</h1>
+<p>Live code: let’s try make a plot for each site</p>
+<div class="cell">
+
+</div>
+</section>
+
+<section id="solution-step-2-functions" class="title-slide slide level1 center">
+<h1>Solution Step 2: Functions</h1>
+
+</section>
+
+<section>
+<section id="section" class="title-slide slide level1 center">
+<h1></h1>
+
+</section>
+<h3 id="how-to-write-a-function-in-r---part-i"><strong>How to Write a Function in R - part I</strong></h3>
+<p>There are several parts of a function:</p>
+<ol type="1">
+<li><p><strong>Function name</strong>. - e.g plot(my_data) is a function with the name <code>plot</code>. You pass that function my_data and it plots accordingly.</p></li>
+<li><p><strong>The function() function</strong>: A function that allows you to create a function.</p></li>
+<li><p><strong>Function Arguments:</strong> what’s the function going to use?</p></li>
+<li><p><strong>Documentation:</strong> Not required for the function but for yourself</p>
+<p>See: https://www.earthdatascience.org/courses/earth-analytics/automate-science-workflows/write-function-r-programming/</p></li>
+</ol></section>
+<section id="function-example" class="title-slide slide level1 center">
+<h1>Function example</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># this is an example function</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a>function_name <span class="ot">&lt;-</span> <span class="cf">function</span>(argument1, argument2) {</span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="co">#' document your function here</span></span>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="co">#' what the function does</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="co">#' function inputs and outputs</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>  some_calculated_output <span class="ot">&lt;-</span> (argument1 <span class="sc">+</span> argument2 )</span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="fu">return</span>(some_calculated_output)</span>
+<span id="cb6-8"><a href="#cb6-8"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="challenge" class="title-slide slide level1 center">
+<h1>Challenge</h1>
+<p>Write a function, called inches_to_mm that converts inches of rain to mm.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>inches_to_mm <span class="ot">&lt;-</span> <span class="cf">function</span>(temp_fahr) {</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co">#' describe what the function does here</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co">#' inputs: Describe the input(s) that the function takes and the format of the input (ie numeric, character, data.frame, etc)</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a><span class="co">#' outputs: Describe the output(s) and associated output format</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a><span class="co">#' calculate mm</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="fu">return</span>()</span>
+<span id="cb7-9"><a href="#cb7-9"></a></span>
+<span id="cb7-10"><a href="#cb7-10"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="function-example-1" class="title-slide slide level1 center">
+<h1>Function example</h1>
+<p>Let’s fill make a function for our plots</p>
+<ul>
+<li>need to define our arguments, including default arguments</li>
+</ul>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># this is an example function</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>function_name <span class="ot">&lt;-</span> <span class="cf">function</span>(argument1, argument2,<span class="at">default_argument =</span> <span class="st">''</span>) {</span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="co">#' document your function here</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="co">#' what the function does</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="co">#' function inputs and outputs</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>  some_calculated_output <span class="ot">&lt;-</span> (argument1 <span class="sc">+</span> argument2 )<span class="sc">/</span>divide_by</span>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="fu">return</span>(some_calculated_output)</span>
+<span id="cb8-8"><a href="#cb8-8"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="documenting-functions" class="title-slide slide level1 center">
+<h1>Documenting functions</h1>
+<ol type="1">
+<li><p>Remind your future self what the function does</p></li>
+<li><p>Show your future self and your colleagues how to use the function</p></li>
+<li><p>Help anyone else looking at your code understand what <strong>you think</strong> the function does</p></li>
+</ol>
+</section>
+
+<section id="roxygen" class="title-slide slide level1 center">
+<h1>ROxygen</h1>
+<p>Helpful if you want to make packages later</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co">#' @name count_na</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co">#' @title provide a count of NAs in the columns of a data.frame</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co">#' @param dt a data frame</span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co">#' @param columns a character vector of column names (default: all columns)</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co">#' </span></span>
+<span id="cb9-6"><a href="#cb9-6"></a><span class="co">#' @section Improvements to do:</span></span>
+<span id="cb9-7"><a href="#cb9-7"></a><span class="co">#'  - add compatibility with vectors</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a><span class="co">#'  - add ability to count NAs in all columns and sort output</span></span>
+<span id="cb9-9"><a href="#cb9-9"></a><span class="co">#' </span></span>
+<span id="cb9-10"><a href="#cb9-10"></a><span class="co">#' @author  Raissa </span></span>
+<span id="cb9-11"><a href="#cb9-11"></a><span class="co">#' @import dplyr</span></span>
+<span id="cb9-12"><a href="#cb9-12"></a><span class="co">#' @importFrom tidyr pivot_longer</span></span>
+<span id="cb9-13"><a href="#cb9-13"></a><span class="co">#' @export</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="solution-step-3-if-statements" class="title-slide slide level1 center">
+<h1>Solution Step 3: If Statements</h1>
+<ul>
+<li><p>If statements are about making choices.</p></li>
+<li><p>Use <code>if (condition)</code> to start a conditional statement, <code>else if (condition)</code> to provide additional tests, and <code>else</code> to provide a default.</p></li>
+<li><p>Use <code>==</code> to test for equality.</p></li>
+<li><p><code>X &amp;&amp; Y</code> is only true if both X and Y are true.</p></li>
+<li><p><code>X || Y</code> is true if either X or Y, or both, are true.</p>
+<h1 id="example">Example</h1>
+<p>An example for our running example: do we save the plot or not?</p></li>
+</ul>
+<div class="cell">
+
+</div>
+<p>Any other choices you can think of?</p>
+</section>
+
+<section id="solution-step-4-applymap-functions" class="title-slide slide level1 center">
+<h1>Solution Step 4: Apply/Map functions</h1>
+<ul>
+<li><p>To avoid loops, people often use apply functions</p>
+<ul>
+<li><code>apply()</code>, <code>lapply()</code>, <code>tapply()</code> etc</li>
+</ul></li>
+<li><p>purrr functions provide more consistency in output datatype</p>
+<ul>
+<li>Need to choose function based on output type</li>
+</ul></li>
+</ul>
+<p>See: https://www.r-bloggers.com/2020/05/one-stop-tutorial-on-purrr-package-in-r/</p>
+</section>
+
+<section id="example-map" class="title-slide slide level1 center">
+<h1>Example: map()</h1>
+<p>Instead of a loop, let’s use the map function to create multiple plots</p>
+<div class="cell">
+
+</div>
+</section>
+
+<section id="example-map2" class="title-slide slide level1 center">
+<h1>Example: map2()</h1>
+<p>Example to create a dataframe</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>x <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">4</span>, <span class="dv">5</span>, <span class="dv">6</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a>y <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">5</span>)</span>
+<span id="cb10-3"><a href="#cb10-3"></a>to_Power <span class="ot">&lt;-</span> <span class="cf">function</span>(x, y){</span>
+<span id="cb10-4"><a href="#cb10-4"></a>  <span class="fu">return</span>(x<span class="sc">**</span>y)</span>
+<span id="cb10-5"><a href="#cb10-5"></a>}</span>
+<span id="cb10-6"><a href="#cb10-6"></a><span class="fu">map2</span>(x, y, to_Power)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+
+<section id="example-map_df-or-map_chr" class="title-slide slide level1 center">
+<h1>Example: map_df or map_chr</h1>
+<div class="cell">
+
+</div>
+</section>
+
+<section id="section-1" class="title-slide slide level1 center">
+<h1></h1>
+
+<img data-src="dry-it-up_presentation_files/download.jpg" style="width:60.0%" class="r-stretch quarto-figure-center"><div class="footer footer-default">
 
 </div>
 </section>
